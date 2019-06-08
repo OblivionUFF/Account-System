@@ -38,7 +38,7 @@
 #define COLOR_RED 0xFF0000FF
 #define COLOR_GREEN 0x3BBD44FF
 #define	BCRYPT_COST	15 // Limit 0-41
-
+native gpci(playerid, serial[], maxlen);
 new ServerTimer = -1;
 new MySQL:SiaSql, String[500], query[400], Float:SpecX[MAX_PLAYERS], Float:SpecY[MAX_PLAYERS], Float:SpecZ[MAX_PLAYERS], vWorld[MAX_PLAYERS], Inter[MAX_PLAYERS];
 new muted[MAX_PLAYERS], Jailed[MAX_PLAYERS], IsSpecing[MAX_PLAYERS], SpamCount[MAX_PLAYERS], Name[MAX_PLAYER_NAME], IsBeingSpeced[MAX_PLAYERS],spectatorid[MAX_PLAYERS];
@@ -74,7 +74,7 @@ public OnFilterScriptInit()
 
 
 /* Tables
-        CREATE TABLE IF NOT EXISTS `Users` (
+     CREATE TABLE IF NOT EXISTS `Users` (
 	`ID` int(7) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Players Reg ID',
 	`name` varchar(24) NOT NULL COMMENT 'Player''s Name',
 	`playerip` varchar(17) NOT NULL COMMENT 'Players IP',
@@ -96,6 +96,7 @@ public OnFilterScriptInit()
 	`reason` VARCHAR(200) NOT NULL,
 	`banIP` VARCHAR(17) NOT NULL,
 	`BanDate` VARCHAR(40) NOT NULL,
+	`serial` VARCHAR(64) NOT NULL DEFAULT 'NO Data',
 	 PRIMARY KEY (`BID`)
 	) ENGINE=MyISAM AUTO_INCREMENT= 0 DEFAULT CHARSET=latin1 COMMENT='Server Ban Storage';
 */
@@ -113,15 +114,51 @@ public OnFilterScriptExit()
 
 public OnPlayerConnect(playerid)
 {
-	new pname[MAX_PLAYER_NAME];
+	new pname[MAX_PLAYER_NAME], PlayerIP1[17], cString[200];
+
+	GetPlayerIp(playerid, PlayerIP1, sizeof(PlayerIP1));
 	GetPlayerName(playerid,pname, sizeof(pname));
     PlayerInfo[playerid][pPlayerName] = pname;
 
+	format(cString, sizeof(cString), "proxy.mind-media.com/block/proxycheck.php?ip=%s", PlayerIP1);
+	HTTP(playerid, HTTP_GET, cString, "", "CheckPlayerProxy");
+
     ResetVariables(playerid);
-    mysql_format(SiaSql, query, sizeof(query), "SELECT * FROM `ServerBans` WHERE `name` = '%e';", PlayerInfo[playerid][pPlayerName]);
+    /*
+    Now It will detect player serial instead of name!
+    */
+    mysql_format(SiaSql, query, sizeof(query), "SELECT * FROM `ServerBans` WHERE `serial` = '%e';", GetPlayerSerial(playerid));
 	mysql_tquery(SiaSql, query, "PlayerBanCheck", "d", playerid);
     return 1;
 }
+
+forward CheckPlayerProxy(playerid, response_code, data[]);
+public CheckPlayerProxy(playerid, response_code, data[])
+{
+	new cpstring[200], ip[17];
+	GetPlayerIp(playerid, ip, sizeof(ip));
+	if(strcmp(ip, "127.0.0.1", true) == 0) return 1;
+	if(response_code == 200)
+	{
+		if(data[0] == 'Y')
+		{
+			format(cpstring, sizeof(cpstring), "Proxy/VPN: %s(%d) has joined the server using a VPN/Proxy.", PlayerInfo[playerid][pPlayerName], playerid);
+	    	SendClientMessageToAll(0xFF0000FF, cpstring);
+		}
+		if(data[0] == 'N')
+		{
+			return 1;
+		}
+		if(data[0] == 'X')
+		{
+			format(cpstring, sizeof(cpstring), "Proxy/VPN: %s(%d) has joined the server using an Invalid IP.", PlayerInfo[playerid][pPlayerName], playerid);
+	    	SendClientMessageToAll(0xFF0000FF, cpstring);
+	    	return 1;
+		}
+	}
+	return 1;
+}
+
 
 forward PlayerBanCheck(playerid);
 public PlayerBanCheck(playerid)
@@ -129,16 +166,22 @@ public PlayerBanCheck(playerid)
 	new rows = cache_num_rows();
 	if(rows != 0)
 	{
-	    new playername[24], adminid[24], reasonban[200], bdate[50];
+	    new playername[24], adminid[24], reasonban[200], bdate[50], pserial[64];
 	    cache_get_value_name(0, "name", playername);
 	    cache_get_value_name(0, "adminbanned", adminid);
 	    cache_get_value_name(0, "BanDate", bdate);
 	    cache_get_value_name(0, "reason", reasonban);
-	    new line [300];
-	    SendClientMessage(playerid, -1, ""COL_RED"You are banned from this server. You can apply for unban in our server forum!");
-		format(line, sizeof(line), ""COL_WHITE"You are banned.\n\n"COL_WHITE"Ban Information:\n"COL_WHITE"Name: "COL_WHITE"%s\n"COL_WHITE"Admin who banned you: "COL_WHITE"%s\n"COL_WHITE"Ban Reason: "COL_WHITE"%s\n"COL_WHITE"Ban Date: "COL_WHITE"%s\n", playername, adminid, reasonban, bdate);
-		ShowPlayerDialog(playerid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line, "Exit", "");
-	    SetTimerEx("KickPlayer", 2000, false, "d", playerid);
+	    cache_get_value_name(0, "reason", reasonban);
+	    cache_get_value_name(0, "serial", pserial);
+	    if(!strcmp(pserial, GetPlayerSerial(playerid), true))
+	    {
+		    new line [300];
+		    SendClientMessage(playerid, -1, ""COL_RED"You are banned from this server. You can apply for unban in our server forum!");
+			format(line, sizeof(line), ""COL_WHITE"You are banned.\n\n"COL_WHITE"Ban Information:\n"COL_WHITE"Name: "COL_WHITE"%s\n"COL_WHITE"Admin who banned you: "COL_WHITE"%s\n"COL_WHITE"Ban Reason: "COL_WHITE"%s\n"COL_WHITE"Ban Date: "COL_WHITE"%s\n", playername, adminid, reasonban, bdate);
+			ShowPlayerDialog(playerid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line, "Exit", "");
+		    SetTimerEx("KickPlayer", 2000, false, "d", playerid);
+		    return 1;
+	   }
 	}
 	else
 	{
@@ -658,7 +701,7 @@ CMD:ban(playerid, params[])
 	ShowPlayerDialog(otherid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line2, "Exit", "");
 
 
-	mysql_format(SiaSql, query, sizeof(query), "INSERT INTO `ServerBans` (`name`, `adminbanned`, `reason`, `banIP`, `BanDate`) VALUES ('%e', '%e', '%e', '%e', '%e')", PlayerInfo[otherid][pPlayerName], PlayerInfo[playerid][pPlayerName], reason, ip,datestr);
+	mysql_format(SiaSql, query, sizeof(query), "INSERT INTO `ServerBans` (`name`, `adminbanned`, `reason`, `banIP`, `BanDate`, `serial`) VALUES ('%e', '%e', '%e', '%e', '%e', '%e')", PlayerInfo[otherid][pPlayerName], PlayerInfo[playerid][pPlayerName], reason, ip,datestr, GetPlayerSerial(otherid));
 	mysql_query(SiaSql, query);
 	
 	format(String, sizeof(String), "{9ACD32}** "COL_RED"%s(%i) has banned %s(%i) [Reason: %s]", PlayerInfo[playerid][pPlayerName], playerid, PlayerInfo[otherid][pPlayerName], otherid, reason);
@@ -1368,4 +1411,11 @@ public GlobalTimer()
 		}
 	 }
 	 return 1;
+}
+
+GetPlayerSerial(playerid)
+{
+	new tmp[64];
+    gpci(playerid, tmp, sizeof(tmp));
+    return tmp;
 }
