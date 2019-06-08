@@ -27,9 +27,9 @@
 
 //== Mysql Connection === //
 #define HOST "127.0.0.1"
-#define USER "server_7"
-#define DB  "server_7_test"
-#define PASS "fy3buairsx"
+#define USER "root"
+#define DB  "acctest"
+#define PASS "server"
 //====================== //
 
 #define COL_WHITE "{FFFFFF}"
@@ -202,7 +202,7 @@ new PlayerInfo[MAX_PLAYERS][pInfo];
 
 public OnFilterScriptInit()
 {
-    UsePlayerPedAnims();    ServerTimer = SetTimer("GlobalTimer", 1000, true);
+    UsePlayerPedAnims();
 
 	SiaSql = mysql_connect(HOST, USER, PASS, DB);
 	if(SiaSql == MYSQL_INVALID_HANDLE)
@@ -211,6 +211,7 @@ public OnFilterScriptInit()
 		SendRconCommand("unloadfs account");
 	}
 	print("SiaReyes Account System: Connection Established!");
+
 
 /* Tables
         CREATE TABLE IF NOT EXISTS `Users` (
@@ -227,7 +228,7 @@ public OnFilterScriptInit()
 	PRIMARY KEY (`ID`),
 	KEY `name` (`name`)
 	) ENGINE=MyISAM  AUTO_INCREMENT = 0 DEFAULT CHARSET=latin1 COMMENT='Player Data Storage';
-	
+
 	CREATE TABLE IF NOT EXISTS `ServerBans`
 	(`BID` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(24) NOT NULL,
@@ -237,14 +238,14 @@ public OnFilterScriptInit()
 	`BanDate` VARCHAR(40) NOT NULL,
 	 PRIMARY KEY (`BID`)
 	) ENGINE=MyISAM AUTO_INCREMENT= 0 DEFAULT CHARSET=latin1 COMMENT='Server Ban Storage';
-*.    
+*/
+
     ServerTimer = SetTimer("GlobalTimer", 1000, true);
 	return 1;
 }
 
 public OnFilterScriptExit()
 {
-  if(PlayerInfo[playerid][pLogged]) SavePlayerData(playerid);
   mysql_close(SiaSql);
   KillTimer(ServerTimer);
   return 1;
@@ -1173,11 +1174,11 @@ CMD:acmds(playerid, params[])
     if(PlayerInfo[playerid][pDuty] == 0) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command while offduty");    PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
     if(PlayerInfo[playerid][pAdmin] < 1) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command.");
     SendClientMessage(playerid, 0x0077BB00 , "{00FF00}(Level 1 |  Helper) ");
-    SendClientMessage(playerid, 0x0077BB00 , "ťť{FFFF00}/slap, /report, /warn, /(un)jail , /(un)freeze, /achat (@) /freeze, /agoto,  /mute, /unmute, /ip, /spec, /god, /specoff ŤŤ");
+    SendClientMessage(playerid, 0x0077BB00 , "»»{FFFF00}/slap, /report, /warn, /(un)jail , /(un)freeze, /achat (@) /freeze, /agoto,  /mute, /unmute, /ip, /spec, /god, /specoff ««");
     SendClientMessage(playerid, 0x0077BB00 , "{00FF00}(Level 2 | Server Administrator) ");
-    SendClientMessage(playerid, 0x0077BB00 , "ťť{FFFF00}/kick, /vcolor, /giveall,  /get, /repair, /aduty, /healme, /ban, /unban, /announce, /aexplode, /asetskin, /asetweather, /aclearchat ŤŤ");
+    SendClientMessage(playerid, 0x0077BB00 , "»»{FFFF00}/kick, /vcolor, /giveall,  /get, /repair, /aduty, /healme, /ban, /unban, /announce, /aexplode, /asetskin, /asetweather, /aclearchat ««");
     SendClientMessage(playerid, 0x0077BB00 , "{00FF00}(Level 3 | Server Owner) ");
-    SendClientMessage(playerid, 0x0077BB00 , "ťť{FFFF00}/setadminlevel, /gmx ŤŤ");
+    SendClientMessage(playerid, 0x0077BB00 , "»»{FFFF00}/setadminlevel, /gmx ««");
     PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
     return 1;
 }
@@ -1326,50 +1327,6 @@ CMD:god(playerid, params[])
     SetPlayerHealth(playerid, 99999);
     return 1;
 }
-
-CMD:vcolor(playerid, params[])
-{
-    if(PlayerInfo[playerid][pDuty] == 0) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command while offduty");
-
-    if(PlayerInfo[playerid][pAdmin] < 2) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command.");
-    new vehicleid = GetPlayerVehicleID(playerid);
-    new colors = random(sizeof(CarColors));
-    new colors2 = random(sizeof(CarColors2));
-    ChangeVehicleColor(vehicleid,CarColors[colors][0],CarColors2[colors2][0]);
-    return 1;
-}
-
-
-forward GlobalTimer();
-public GlobalTimer()
-{
-	 foreach(new ii : Player)
-	 {
-		if(Jailed[ii] > 0)
-		{
-			Jailed[ii]--;
-		    if(Jailed[ii] == 0)
-		    {
-		    	Jailed[ii] = 0;
-				SpawnPlayer(ii);
-				ResetPlayerWeapons(ii);
-		    	SendClientMessage(ii, COLOR_GREEN, "{F83934}[System]:{8B8B8B} You have been un-jailed by the server. (times up)");
-			}
-		}
-		if(muted[ii] > 0)
-		{
-	          muted[ii]--;
-			  if(muted[ii] == 0)
-			  {
-	            muted[ii] = 0;
-	            format(String,sizeof(String),"{F83934}[System]:{8B8B8B} %s got unmuted (times up)",PlayerInfo[ii][pPlayerName]);
-	            SendClientMessageToAll(-1, String);
-			  }
-		}
-	 }
-	 return 1;
-}
-
 new CarColors[][1] =
 {
     {1},
@@ -1630,3 +1587,45 @@ new CarColors2[][1] =
     {1}
 
 };
+CMD:vcolor(playerid, params[])
+{
+    if(PlayerInfo[playerid][pDuty] == 0) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command while offduty");
+
+    if(PlayerInfo[playerid][pAdmin] < 2) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command.");
+    new vehicleid = GetPlayerVehicleID(playerid);
+    new colors = random(sizeof(CarColors));
+    new colors2 = random(sizeof(CarColors2));
+    ChangeVehicleColor(vehicleid,CarColors[colors][0],CarColors2[colors2][0]);
+    return 1;
+}
+
+
+forward GlobalTimer();
+public GlobalTimer()
+{
+	 foreach(new ii : Player)
+	 {
+		if(Jailed[ii] > 0)
+		{
+			Jailed[ii]--;
+		    if(Jailed[ii] == 0)
+		    {
+		    	Jailed[ii] = 0;
+				SpawnPlayer(ii);
+				ResetPlayerWeapons(ii);
+		    	SendClientMessage(ii, COLOR_GREEN, "{F83934}[System]:{8B8B8B} You have been un-jailed by the server. (times up)");
+			}
+		}
+		if(muted[ii] > 0)
+		{
+	          muted[ii]--;
+			  if(muted[ii] == 0)
+			  {
+	            muted[ii] = 0;
+	            format(String,sizeof(String),"{F83934}[System]:{8B8B8B} %s got unmuted (times up)",PlayerInfo[ii][pPlayerName]);
+	            SendClientMessageToAll(-1, String);
+			  }
+		}
+	 }
+	 return 1;
+}
