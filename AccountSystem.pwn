@@ -125,9 +125,9 @@ public OnPlayerConnect(playerid)
 
     ResetVariables(playerid);
     /*
-    Now It will detect player serial instead of name!
+    Now It will detect player serial with name
     */
-    mysql_format(SiaSql, query, sizeof(query), "SELECT * FROM `ServerBans` WHERE `serial` = '%e';", GetPlayerSerial(playerid));
+    mysql_format(SiaSql, query, sizeof(query), "SELECT * FROM `ServerBans` WHERE `serial` = '%e' OR `name`= '%e';", GetPlayerSerial(playerid), PlayerInfo[playerid][pPlayerName]);
 	mysql_tquery(SiaSql, query, "PlayerBanCheck", "d", playerid);
     return 1;
 }
