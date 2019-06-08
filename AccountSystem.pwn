@@ -212,35 +212,32 @@ public OnFilterScriptInit()
 	}
 	print("SiaReyes Account System: Connection Established!");
 
-	new createstr[900], createstr2[800];
-
-	format(createstr, sizeof(createstr), "\
-	CREATE TABLE IF NOT EXISTS `Users` (\
-	`ID` int(7) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Players Reg ID',\
-	`name` varchar(24) NOT NULL COMMENT 'Player''s Name',\
-	`playerip` varchar(17) NOT NULL COMMENT 'Players IP',\
-	`password` varchar(200) NOT NULL COMMENT 'Players Password',\
-	`kills` int(6) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Kills',\
-	`deaths` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Deaths',\
-	`adminlevel` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Level',\
-	`money` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Money',\
-	`score` mediumint(6) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Score',\
-	`active` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Active',\
-	PRIMARY KEY (`ID`),\
-	KEY `name` (`name`)\
-	) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Player Data Storage';", createstr);
-	mysql_query(SiaSql, createstr);
+/* Tables
+        CREATE TABLE IF NOT EXISTS `Users` (
+	`ID` int(7) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Players Reg ID',
+	`name` varchar(24) NOT NULL COMMENT 'Player''s Name',
+	`playerip` varchar(17) NOT NULL COMMENT 'Players IP',
+	`password` varchar(200) NOT NULL COMMENT 'Players Password',
+	`kills` int(6) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Kills',
+	`deaths` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Deaths',
+	`adminlevel` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Level',
+	`money` int(11) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Money',
+	`score` mediumint(6) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Score',
+	`active` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'Player Active',
+	PRIMARY KEY (`ID`),
+	KEY `name` (`name`)
+	) ENGINE=MyISAM  AUTO_INCREMENT = 0 DEFAULT CHARSET=latin1 COMMENT='Player Data Storage';
 	
-	format(createstr2, sizeof(createstr2),"CREATE TABLE IF NOT EXISTS `ServerBans`\
-	(`BID` int(11) AUTO_INCREMENT PRIMARY KEY,\
-	`name` VARCHAR(24) NOT NULL,\
-	`adminbanned` VARCHAR(24) NOT NULL,\
-	`reason` VARCHAR(200) NOT NULL,\
-	`banIP` VARCHAR(17) NOT NULL,\
-	`BanDate` VARCHAR(40) NOT NULL\
-	) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Server Ban Storage';");
-    mysql_query(SiaSql, createstr2);
-    
+	CREATE TABLE IF NOT EXISTS `ServerBans`
+	(`BID` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(24) NOT NULL,
+	`adminbanned` VARCHAR(24) NOT NULL,
+	`reason` VARCHAR(200) NOT NULL,
+	`banIP` VARCHAR(17) NOT NULL,
+	`BanDate` VARCHAR(40) NOT NULL,
+	 PRIMARY KEY (`BID`)
+	) ENGINE=MyISAM AUTO_INCREMENT= 0 DEFAULT CHARSET=latin1 COMMENT='Server Ban Storage';
+*.    
     ServerTimer = SetTimer("GlobalTimer", 1000, true);
 	return 1;
 }
@@ -1176,11 +1173,11 @@ CMD:acmds(playerid, params[])
     if(PlayerInfo[playerid][pDuty] == 0) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command while offduty");    PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
     if(PlayerInfo[playerid][pAdmin] < 1) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command.");
     SendClientMessage(playerid, 0x0077BB00 , "{00FF00}(Level 1 |  Helper) ");
-    SendClientMessage(playerid, 0x0077BB00 , "»»{FFFF00}/slap, /report, /warn, /(un)jail , /(un)freeze, /achat (@) /freeze, /agoto,  /mute, /unmute, /ip, /spec, /god, /specoff ««");
+    SendClientMessage(playerid, 0x0077BB00 , "Å¥Å¥{FFFF00}/slap, /report, /warn, /(un)jail , /(un)freeze, /achat (@) /freeze, /agoto,  /mute, /unmute, /ip, /spec, /god, /specoff Å¤Å¤");
     SendClientMessage(playerid, 0x0077BB00 , "{00FF00}(Level 2 | Server Administrator) ");
-    SendClientMessage(playerid, 0x0077BB00 , "»»{FFFF00}/kick, /vcolor, /giveall,  /get, /repair, /aduty, /healme, /ban, /unban, /announce, /aexplode, /asetskin, /asetweather, /aclearchat ««");
+    SendClientMessage(playerid, 0x0077BB00 , "Å¥Å¥{FFFF00}/kick, /vcolor, /giveall,  /get, /repair, /aduty, /healme, /ban, /unban, /announce, /aexplode, /asetskin, /asetweather, /aclearchat Å¤Å¤");
     SendClientMessage(playerid, 0x0077BB00 , "{00FF00}(Level 3 | Server Owner) ");
-    SendClientMessage(playerid, 0x0077BB00 , "»»{FFFF00}/setadminlevel, /gmx ««");
+    SendClientMessage(playerid, 0x0077BB00 , "Å¥Å¥{FFFF00}/setadminlevel, /gmx Å¤Å¤");
     PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
     return 1;
 }
