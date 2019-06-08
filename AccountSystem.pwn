@@ -781,6 +781,7 @@ CMD:ban(playerid, params[])
 	new hour, minute, second;
 	gettime(hour, minute, second);
 	getdate(year, month, day);
+	GetPlayerIp(otherid, ip, sizeof(ip));
 	format(datestr, 200, "%02d:%02d (%02d/%02d/%d)", hour, minute, month, day, year);
 	
 	SendClientMessage(otherid, COLOR_RED, "You have been banned.");
@@ -789,7 +790,6 @@ CMD:ban(playerid, params[])
 	PlayerInfo[otherid][pPlayerName], ip, PlayerInfo[playerid][pPlayerName], reason, datestr);
 	ShowPlayerDialog(otherid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line2, "Exit", "");
 
-	GetPlayerIp(otherid, ip, sizeof(ip));
 	mysql_format(SiaSql, query, sizeof(query), "INSERT INTO `ServerBans` (`name`, `adminbanned`, `reason`, `banIP`, `BanDate`) VALUES ('%e', '%e', '%e', '%e', '%e')", PlayerInfo[otherid][pPlayerName], PlayerInfo[playerid][pPlayerName], reason, ip,datestr);
 	mysql_query(SiaSql, query);
 	
