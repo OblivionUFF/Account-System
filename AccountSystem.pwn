@@ -371,7 +371,7 @@ public PlayerPasswordTyped(playerid)
 	format(String, sizeof(String), "Server: %s(%d) has registered and making total number of %s registered players",PlayerInfo[playerid][pPlayerName], playerid, GetCurrency(PlayerInfo[playerid][pID]));
 	SendClientMessageToAll(COLOR_BLUE, String);
     cache_delete(result);
-    //	SpawnPlayer(playerid); // Goes to Skin Selection
+    	SpawnPlayer(playerid); // Goes to Skin Selection
 	return 1;
 }
 
@@ -411,7 +411,7 @@ public LoadPlayerData(playerid)
 	
 	SendClientMessage(playerid, COLOR_GREEN, "Success: You have been successfully logged in");
 	PlayerInfo[playerid][pLogged] = true;
-//	SpawnPlayer(playerid); // Goes to Skin Selection
+	SpawnPlayer(playerid); // Goes to Skin Selection
 	return 1;
 }
 
