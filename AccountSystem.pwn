@@ -202,7 +202,7 @@ new PlayerInfo[MAX_PLAYERS][pInfo];
 
 public OnFilterScriptInit()
 {
-    UsePlayerPedAnims();
+
 
 	SiaSql = mysql_connect(HOST, USER, PASS, DB);
 	if(SiaSql == MYSQL_INVALID_HANDLE)
@@ -323,7 +323,7 @@ ResetVariables(playerid)
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
-  if(Jailed[playerid] > 0) return SendClientMessage(playerid, COLOR_RED, "Server: You aren't allowed to chat while you are in jail");
+  if(Jailed[playerid] > 0) return SendClientMessage(playerid, COLOR_RED, "Server: You aren't allowed to use commands while you are in jail");
   return 1;
 }
 
@@ -782,6 +782,7 @@ CMD:ban(playerid, params[])
 	gettime(hour, minute, second);
 	getdate(year, month, day);
 	GetPlayerIp(otherid, ip, sizeof(ip));
+	
 	format(datestr, 200, "%02d:%02d (%02d/%02d/%d)", hour, minute, month, day, year);
 	
 	SendClientMessage(otherid, COLOR_RED, "You have been banned.");
@@ -789,6 +790,7 @@ CMD:ban(playerid, params[])
 	format(line2, sizeof(line2), ""COL_WHITE"You are banned.\n\n"COL_WHITE"Ban Information:\n"COL_WHITE"Name: "COL_WHITE"%s\n"COL_WHITE"IP: "COL_WHITE"%s\n"COL_WHITE"Admin who banned you: "COL_WHITE"%s\n"COL_WHITE"Ban Reason: "COL_WHITE"%s\n"COL_WHITE"Ban Date: "COL_WHITE"%s\n",
 	PlayerInfo[otherid][pPlayerName], ip, PlayerInfo[playerid][pPlayerName], reason, datestr);
 	ShowPlayerDialog(otherid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line2, "Exit", "");
+
 
 	mysql_format(SiaSql, query, sizeof(query), "INSERT INTO `ServerBans` (`name`, `adminbanned`, `reason`, `banIP`, `BanDate`) VALUES ('%e', '%e', '%e', '%e', '%e')", PlayerInfo[otherid][pPlayerName], PlayerInfo[playerid][pPlayerName], reason, ip,datestr);
 	mysql_query(SiaSql, query);
