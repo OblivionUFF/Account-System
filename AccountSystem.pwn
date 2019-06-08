@@ -3,7 +3,6 @@
 *                SCRIPT VERSION: 1
 *                SCRIPT DEVELOPER: SiaReyes
 *                SCRIPT UPDATES v1:
-*				 Added /aduty, /warn, /mute /jail
 *				 Improved some minor bugs.
 *
 *******************************************************************************/
@@ -16,8 +15,6 @@
 #include <zcmd>
 #include <foreach>
 
-//[===========================Version 0.5===========================]
-//[===========================Version 0.1a===========================]
 #define DIALOG_REGISTER 800
 #define DIALOG_LOGIN 8001
 #define DIALOG_SUCCESS_1 8003
@@ -36,147 +33,10 @@
 #define COL_RED "{F81414}"
 #define COL_GREEN "{00FF22}"
 #define COL_BLUE "{00CED1}"
-    //Shades of red
-#define COLOR_INDIANRED 0xCD5C5CFF
-#define COLOR_LIGHTCORAL 0xF08080FF
-#define COLOR_SALMON 0xFA8072FF
-#define COLOR_DARKSALMON 0xE9967AFF
-#define COLOR_LIGHTSALMON 0xFFA07AFF
-#define COLOR_CRIMSON 0xDC143CFF
-#define COLOR_RED 0xFF0000FF
-#define COLOR_FIREBRICK B22222FF
-#define COLOR_DARKRED 0x8B0000FF
-
-//Shades of pink
-#define COLOR_PINK 0xFFC0CBFF
-#define COLOR_LIGHTPINK 0xFFB6C1FF
-#define COLOR_HOTPINK 0xFF69B4FF
-#define COLOR_DEEPPINK 0xFF1493FF
-#define COLOR_MEDIUMVIOLETRED 0xC71585FF
-#define COLOR_PALEVIOLETRED 0xDB7093FF
-
-//Shades of Orange
-#define COLOR_CORAL 0xFF7F50FF
-#define COLOR_TOMATO 0xFF6347FF
-#define COLOR_ORANGERED 0xFF4500FF
-#define COLOR_DARKORANGE 0xFF8C00FF
-#define COLOR_ORANGE 0xFFA500FF
-
-//Shades of Yellow
-#define COLOR_GOLD 0xFFD700FF
-#define COLOR_YELLOW 0xFFFF00FF
-#define COLOR_LIGHTYELLOW 0xFFFFE0FF
-#define COLOR_LEMONCHIFFON 0xFFFACDFF
-#define COLOR_LIGHTGOLDENRODYELLOW 0xFAFAD2FF
-#define COLOR_PAPAYAWHIP 0xFFEFD5FF
-#define COLOR_MOCCASIN 0xFFE4B5FF
-#define COLOR_PEACHPUFF 0xFFDAB9FF
-#define COLOR_PALEGOLDENROD 0xEEE8AAFF
-#define COLOR_KHAKI 0xF0E68CFF
-#define COLOR_DARKKHAKI 0xBDB76BFF
-
-//Shades of Purple
-#define COLOR_LAVENDER 0xE6E6FAFF
-#define COLOR_THISTLE 0xD8BFD8FF
-#define COLOR_PLUM 0xDDA0DDFF
-#define COLOR_VIOLET 0xEE82EEFF
-#define COLOR_ORCHID 0xDA70D6FF
-#define COLOR_FUCHSIA 0xFF00FFFF
-#define COLOR_MAGENTA 0xFF00FFFF
-#define COLOR_MEDIUMORCHID 0xBA55D3FF
-#define COLOR_MEDIUMPURPLE 0x9370DBFF
-#define COLOR_AMETHYST 0x9966CCFF
-#define COLOR_BLUEVIOLET 0x8A2BE2FF
-#define COLOR_DARKVIOLET 0x9400D3FF
-#define COLOR_DARKORCHID 0x9932CCFF
-#define COLOR_DARKMAGENTA 0x8B008BFF
-#define COLOR_PURPLE 0x800080FF
-#define COLOR_INDIGO 0x4B0082FF
-#define COLOR_SLATEBLUE 0x6A5ACDFF
-#define COLOR_DARKSLATEBLUE 0x483D8BFF
-#define COLOR_MEDIUMSLATEBLUE 0x7B68EEFF
-
-//Shades of Green
-#define COLOR_GREENYELLOW 0xADFF2FFF
-#define COLOR_CHARTREUSE 0x7FFF00FF
-#define COLOR_LAWNGREEN 0x7CFC00FF
-#define COLOR_LIME 0x00FF00FF
-#define COLOR_LIMEGREEN 0x32CD32FF
-#define COLOR_PALEGREEN 0x98FB98FF
-#define COLOR_LIGHTGREEN 0x90EE90FF
-#define COLOR_MEDIUMSPRINGGREEN 0x00FA9AFF
-#define COLOR_SPRINGGREEN 0x00FF7FFF
-#define COLOR_MEDIUMSEAGREEN 0x3CB371FF
-#define COLOR_SEAGREEN 0x2E8B57FF
-#define COLOR_FORESTGREEN 0x228B22FF
-#define COLOR_GREEN 0x008000FF
-#define COLOR_DARKGREEN 0x006400FF
-#define COLOR_YELLOWGREEN 0x9ACD32FF
-#define COLOR_OLIVEDRAB 0x6B8E23FF
-#define COLOR_OLIVE 0x808000FF
-#define COLOR_DARKOLIVEGREEN 0x556B2FFF
-#define COLOR_MEDIUMAQUAMARINE 0x66CDAAFF
-#define COLOR_DARKSEAGREEN 0x8FBC8FFF
-#define COLOR_LIGHTSEAGREEN 0x20B2AAFF
-#define COLOR_DARKCYAN 0x008B8BFF
-#define COLOR_TEAL 0x008080FF
-
-//Shades of Blue/Cyan
-#define COLOR_AQUA 0x00FFFFFF
-#define COLOR_CYAN 0x00FFFFFF
-#define COLOR_LIGHTCYAN 0xE0FFFFFF
-#define COLOR_PALETURQUOISE 0xAFEEEEFF
-#define COLOR_AQUAMARINE 0x7FFFD4FF
-#define COLOR_TURQUOISE 0x40E0D0FF
-#define COLOR_MEDIUMTURQUOISE 0x48D1CC
-#define COLOR_DARKTURQUOISE 0x00CED1FF
-#define COLOR_CADETBLUE 0x5F9EA0FF
-#define COLOR_STEELBLUE 0x4682B4FF
-#define COLOR_LIGHTSTEELBLUE 0xB0C4DEFF
-#define COLOR_POWDERBLUE 0xB0E0E6FF
-#define COLOR_LIGHTBLUE 0xADD8E6FF
-#define COLOR_SKYBLUE 0x87CEEBFF
-#define COLOR_LIGHTSKYBLUE 0x87CEFAFF
-#define COLOR_DEEPSKYBLUE 0x00BFFFFF
-#define COLOR_DODGERBLUE 0x1E90FFFF
-#define COLOR_CORNFLOWERBLUE 0x6495EDFF
-#define COLOR_MEDIUMSLATEBLUE 0x7B68EEFF
-#define COLOR_ROYALBLUE 0x4169E1FF
-#define COLOR_BLUE 0x0000FFFF
-#define COLOR_MEDIUMBLUE 0x0000CDFF
-#define DARKBLUE 0x00008BFF
-#define COLOR_NAVY 0x000080FF
-#define COLOR_MIDNIGHTBLUE 0x191970FF
-
-//Shades of Brown
-#define COLOR_CORNSILK 0xFFF8DCFF
-#define COLOR_BLANCHEDALMOND 0xFFEBCDFF
-#define COLOR_BISQUE 0xFFE4C4FF
-#define COLOR_NAVAJOWHITE 0xFFDEADFF
-#define COLOR_WHEAT 0xF5DEB3FF
-#define COLOR_BURLYWOOD 0xDEB887FF
-#define COLOR_TAN 0xD2B48CFF
-#define COLOR_ROSYBROWN 0xBC8F8FFF
-#define COLOR_SANDYBROWN 0xF4A460FF
-#define COLOR_DARKGOLDENROD 0xB8860BFF
-#define COLOR_PERU 0xCD853FFF
-#define COLOR_SADDLEBROWN 0x8B4513FF
-#define COLOR_SIENNA 0xA0522DFF
-#define COLOR_BROWN 0xA52A2AFF
-#define COLOR_MAROON 0x800000FF
-
-//Shades of Grey
 #define COLOR_WHITE 0xFFFFFFFF
-#define COLOR_GAINSBORO 0xDCDCDCFF
-#define COLOR_LIGHTGREY 0xD3D3D3FF
-#define COLOR_SILVER 0xC0C0C0FF
-#define COLOR_DARKGRAY 0xA9A9A9FF
-#define COLOR_GRAY 0x808080FF
-#define COLOR_DIMGRAY 0x696969FF
-#define COLOR_LIGHTSLATEGRAY 0x778899FF
-#define COLOR_SLATEGRAY 0x708090FF
-#define COLOR_DARKSLATEGRAY 0x2F4F4FFF
-#define COLOR_BLACK 0x000000FFPS.
+#define COLOR_BLUE 0x0000FFFF
+#define COLOR_RED 0xFF0000FF
+#define COLOR_GREEN 0x3BBD44FF
 #define	BCRYPT_COST	15 // Limit 0-41
 
 new ServerTimer = -1;
@@ -321,9 +181,13 @@ ResetVariables(playerid)
 	PlayerInfo[playerid][pID] = -1;
 }
 
-public OnPlayerCommandText(playerid, cmdtext[])
+public OnPlayerCommandReceived(playerid, cmdtext[])
 {
-  if(Jailed[playerid] > 0) return SendClientMessage(playerid, COLOR_RED, "Server: You aren't allowed to use commands while you are in jail");
+  if(Jailed[playerid] > 0)
+  {
+    SendClientMessage(playerid, COLOR_RED, "Server: You aren't allowed to use commands while you are in jail");
+    return 0;
+  }
   return 1;
 }
 
@@ -371,7 +235,7 @@ public PlayerPasswordTyped(playerid)
 	format(String, sizeof(String), "Server: %s(%d) has registered and making total number of %s registered players",PlayerInfo[playerid][pPlayerName], playerid, GetCurrency(PlayerInfo[playerid][pID]));
 	SendClientMessageToAll(COLOR_BLUE, String);
     cache_delete(result);
-    	SpawnPlayer(playerid); // Goes to Skin Selection
+    //	SpawnPlayer(playerid); // Goes to Skin Selection
 	return 1;
 }
 
@@ -411,7 +275,7 @@ public LoadPlayerData(playerid)
 	
 	SendClientMessage(playerid, COLOR_GREEN, "Success: You have been successfully logged in");
 	PlayerInfo[playerid][pLogged] = true;
-	SpawnPlayer(playerid); // Goes to Skin Selection
+//	SpawnPlayer(playerid); // Goes to Skin Selection
 	return 1;
 }
 
@@ -601,12 +465,12 @@ CMD:jail(playerid,params[])
     if(PlayerInfo[playerid][pAdmin] < 1) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command.");
 
     new target, time, reason[120];
-    if(sscanf(params,"ui",target, time, reason)) return SendClientMessage(playerid,-1,"{F83934}[Usage]:{8B8B8B} Use /jail (playerid) (time 10-600) (reason).");
+    if(sscanf(params,"uis[120]",target, time, reason)) return SendClientMessage(playerid,-1,"{F83934}[Usage]:{8B8B8B} Use /jail (playerid) (time 10-600) (reason).");
     if(!IsPlayerConnected(target)) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} Player is not connected.");
 	if(Jailed[target] != 0) return SendClientMessage(playerid,-1,"{F83934} The player is already in jail!");
-    if(reason[0] != '*' && strlen(reason) > 60)
+    if(reason[0] != '*' && strlen(reason) > 120)
 	{
-	 	SendClientMessage(playerid,-1,"{F83934} Reason too long! Must be smaller than 60 characters!");
+	 	SendClientMessage(playerid,-1,"{F83934} Reason too long! Must be smaller than 120 characters!");
 	   	return true;
 	}
 	if(time < 10 || time > 600)
@@ -617,11 +481,13 @@ CMD:jail(playerid,params[])
 	ResetPlayerWeapons(target);
 	Jailed[target] = time;
 	SetPlayerPos(target, 198.4245, 162.3897, 1003.0859);
-	SetPlayerInterior(target, 3); SetPlayerVirtualWorld(target, 909);
+	SetPlayerInterior(target, 3);
+	SetPlayerVirtualWorld(target, 909);
     format(String,sizeof(String),"{F83934}[System]:{8B8B8B} %s has jailed %s for %d seconds - Reason: %s",PlayerInfo[playerid][pPlayerName], PlayerInfo[target][pPlayerName], time, reason);
     SendClientMessageToAll(-1,String);
     return 1;
 }
+
 CMD:unjail(playerid, params[])
 {
     if(PlayerInfo[playerid][pDuty] == 0) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command while offduty");
@@ -1459,136 +1325,6 @@ new CarColors[][1] =
     {126}
 
 };
-new CarColors2[][1] =
-{
-    {126},
-    {125},
-    {124},
-    {123},
-    {122},
-    {121},
-    {120},
-    {119},
-    {118},
-    {117},
-    {116},
-    {115},
-    {114},
-    {113},
-    {112},
-    {111},
-    {110},
-    {109},
-    {108},
-    {107},
-    {106},
-    {105},
-    {104},
-    {103},
-    {102},
-    {101},
-    {100},
-    {99},
-    {98},
-    {97},
-    {96},
-    {95},
-    {94},
-    {93},
-    {92},
-    {91},
-    {90},
-    {89},
-    {88},
-    {87},
-    {86},
-    {85},
-    {84},
-    {83},
-    {82},
-    {81},
-    {80},
-    {79},
-    {78},
-    {77},
-    {76},
-    {75},
-    {74},
-    {73},
-    {72},
-    {71},
-    {70},
-    {69},
-    {68},
-    {67},
-    {66},
-    {65},
-    {64},
-    {63},
-    {62},
-    {61},
-    {60},
-    {59},
-    {58},
-    {57},
-    {56},
-    {55},
-    {54},
-    {53},
-    {52},
-    {51},
-    {50},
-    {49},
-    {48},
-    {47},
-    {46},
-    {45},
-    {44},
-    {43},
-    {42},
-    {41},
-    {40},
-    {39},
-    {38},
-    {37},
-    {36},
-    {35},
-    {34},
-    {33},
-    {32},
-    {31},
-    {30},
-    {29},
-    {28},
-    {27},
-    {26},
-    {25},
-    {24},
-    {23},
-    {22},
-    {21},
-    {20},
-    {19},
-    {18},
-    {17},
-    {16},
-    {15},
-    {14},
-    {13},
-    {12},
-    {11},
-    {10},
-    {9},
-    {8},
-    {7},
-    {6},
-    {5},
-    {4},
-    {3},
-    {2},
-    {1}
-
-};
 CMD:vcolor(playerid, params[])
 {
     if(PlayerInfo[playerid][pDuty] == 0) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command while offduty");
@@ -1596,8 +1332,8 @@ CMD:vcolor(playerid, params[])
     if(PlayerInfo[playerid][pAdmin] < 2) return SendClientMessage(playerid,-1,"{F83934}[Error]:{8B8B8B} You're not authorized to use this command.");
     new vehicleid = GetPlayerVehicleID(playerid);
     new colors = random(sizeof(CarColors));
-    new colors2 = random(sizeof(CarColors2));
-    ChangeVehicleColor(vehicleid,CarColors[colors][0],CarColors2[colors2][0]);
+    new colors2 = random(sizeof(CarColors));
+    ChangeVehicleColor(vehicleid,CarColors[colors][0],CarColors[colors2][0]);
     return 1;
 }
 
@@ -1613,8 +1349,10 @@ public GlobalTimer()
 		    if(Jailed[ii] == 0)
 		    {
 		    	Jailed[ii] = 0;
-				SpawnPlayer(ii);
 				ResetPlayerWeapons(ii);
+				SetPlayerInterior(ii, 0);
+				SetPlayerVirtualWorld(ii, 0);
+				SpawnPlayer(ii);
 		    	SendClientMessage(ii, COLOR_GREEN, "{F83934}[System]:{8B8B8B} You have been un-jailed by the server. (times up)");
 			}
 		}
