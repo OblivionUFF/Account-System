@@ -173,15 +173,11 @@ public PlayerBanCheck(playerid)
 	    cache_get_value_name(0, "reason", reasonban);
 	    cache_get_value_name(0, "reason", reasonban);
 	    cache_get_value_name(0, "serial", pserial);
-	    if(!strcmp(pserial, GetPlayerSerial(playerid), true)) // just a re-check
-	    {
 		    new line [300];
 		    SendClientMessage(playerid, -1, ""COL_RED"You are banned from this server. You can apply for unban in our server forum!");
 			format(line, sizeof(line), ""COL_WHITE"You are banned.\n\n"COL_WHITE"Ban Information:\n"COL_WHITE"Name: "COL_WHITE"%s\n"COL_WHITE"Admin who banned you: "COL_WHITE"%s\n"COL_WHITE"Ban Reason: "COL_WHITE"%s\n"COL_WHITE"Ban Date: "COL_WHITE"%s\n", playername, adminid, reasonban, bdate);
 			ShowPlayerDialog(playerid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line, "Exit", "");
-		    SetTimerEx("KickPlayer", 2000, false, "d", playerid);
-		    return 1;
-	   }
+		     SetTimerEx("KickPlayer", 2000, false, "d", playerid);
 	}
 	else
 	{
