@@ -173,7 +173,7 @@ public PlayerBanCheck(playerid)
 	    cache_get_value_name(0, "reason", reasonban);
 	    cache_get_value_name(0, "reason", reasonban);
 	    cache_get_value_name(0, "serial", pserial);
-	    if(!strcmp(pserial, GetPlayerSerial(playerid), true))
+	    if(!strcmp(pserial, GetPlayerSerial(playerid), true)) // just a re-check
 	    {
 		    new line [300];
 		    SendClientMessage(playerid, -1, ""COL_RED"You are banned from this server. You can apply for unban in our server forum!");
@@ -283,8 +283,6 @@ public PlayerPasswordTyped(playerid)
 }
 
 
-stock SPD(playerid, dialogid, style, const caption[], const info[], const button1[], const button2[])
-
 forward PasswordRight(playerid);
 public PasswordRight(playerid)
 {
@@ -324,19 +322,6 @@ public LoadPlayerData(playerid)
 
 
 forward Wheel1(playerid);
-public Wheel1(playerid)
-{
-    new Wheel = random(6);
-    switch(Wheel)
-    {
-        case 0: AddVehicleComponent(GetPlayerVehicleID(playerid), 1073);
-        case 1: AddVehicleComponent(GetPlayerVehicleID(playerid), 1098);
-        case 2: AddVehicleComponent(GetPlayerVehicleID(playerid), 1080);
-        case 3: AddVehicleComponent(GetPlayerVehicleID(playerid), 1077);
-        case 4: AddVehicleComponent(GetPlayerVehicleID(playerid), 1076);
-        case 5: AddVehicleComponent(GetPlayerVehicleID(playerid), 1075);
-    }
-}
 
 public OnPlayerDisconnect(playerid,reason)
 {
