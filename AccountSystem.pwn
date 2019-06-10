@@ -96,7 +96,6 @@ public OnFilterScriptInit()
 	`reason` VARCHAR(200) NOT NULL,
 	`banIP` VARCHAR(17) NOT NULL,
 	`BanDate` VARCHAR(40) NOT NULL,
-	`serial` VARCHAR(64) NOT NULL DEFAULT 'NO Data',
 	 PRIMARY KEY (`BID`)
 	) ENGINE=MyISAM AUTO_INCREMENT= 0 DEFAULT CHARSET=latin1 COMMENT='Server Ban Storage';
 */
@@ -118,16 +117,13 @@ public OnPlayerConnect(playerid)
 
 	GetPlayerIp(playerid, PlayerIP1, sizeof(PlayerIP1));
 	GetPlayerName(playerid,pname, sizeof(pname));
-    PlayerInfo[playerid][pPlayerName] = pname;
+        PlayerInfo[playerid][pPlayerName] = pname;
 
 	format(cString, sizeof(cString), "proxy.mind-media.com/block/proxycheck.php?ip=%s", PlayerIP1);
 	HTTP(playerid, HTTP_GET, cString, "", "CheckPlayerProxy");
 
     ResetVariables(playerid);
-    /*
-    Now It will detect player serial with name
-    */
-    mysql_format(SiaSql, query, sizeof(query), "SELECT * FROM `ServerBans` WHERE `name` = '%e' OR `serial`= '%e';",PlayerInfo[playerid][pPlayerName], GetPlayerSerial(playerid));
+    mysql_format(SiaSql, query, sizeof(query), "SELECT * FROM `ServerBans` WHERE `name` = '%e';",PlayerInfo[playerid][pPlayerName]);
 	mysql_tquery(SiaSql, query, "PlayerBanCheck", "d", playerid);
     return 1;
 }
@@ -172,7 +168,6 @@ public PlayerBanCheck(playerid)
 	    cache_get_value_name(0, "BanDate", bdate);
 	    cache_get_value_name(0, "reason", reasonban);
 	    cache_get_value_name(0, "reason", reasonban);
-	    cache_get_value_name(0, "serial", pserial);
 		    new line [300];
 		    SendClientMessage(playerid, -1, ""COL_RED"You are banned from this server. You can apply for unban in our server forum!");
 			format(line, sizeof(line), ""COL_WHITE"You are banned.\n\n"COL_WHITE"Ban Information:\n"COL_WHITE"Name: "COL_WHITE"%s\n"COL_WHITE"Admin who banned you: "COL_WHITE"%s\n"COL_WHITE"Ban Reason: "COL_WHITE"%s\n"COL_WHITE"Ban Date: "COL_WHITE"%s\n", playername, adminid, reasonban, bdate);
@@ -682,7 +677,7 @@ CMD:ban(playerid, params[])
 	ShowPlayerDialog(otherid, 1227, DIALOG_STYLE_MSGBOX, ""COL_WHITE"Banned", line2, "Exit", "");
 
 
-	mysql_format(SiaSql, query, sizeof(query), "INSERT INTO `ServerBans` (`name`, `adminbanned`, `reason`, `banIP`, `BanDate`, `serial`) VALUES ('%e', '%e', '%e', '%e', '%e', '%e')", PlayerInfo[otherid][pPlayerName], PlayerInfo[playerid][pPlayerName], reason, ip,datestr, GetPlayerSerial(otherid));
+	mysql_format(SiaSql, query, sizeof(query), "INSERT INTO `ServerBans` (`name`, `adminbanned`, `reason`, `banIP`, `BanDate`) VALUES ('%e', '%e', '%e', '%e', '%e')", PlayerInfo[otherid][pPlayerName], PlayerInfo[playerid][pPlayerName], reason, ip,datestr);
 	mysql_query(SiaSql, query);
 	
 	format(String, sizeof(String), "{9ACD32}** "COL_RED"%s(%i) has banned %s(%i) [Reason: %s]", PlayerInfo[playerid][pPlayerName], playerid, PlayerInfo[otherid][pPlayerName], otherid, reason);
